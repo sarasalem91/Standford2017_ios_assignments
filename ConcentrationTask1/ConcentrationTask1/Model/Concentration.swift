@@ -16,18 +16,20 @@ struct Concentration{
     
     var indexOfOneAndOnlyCard:Int? { // previous index
         get{
-            var foundIndx:Int?
-            for index in cards.indices{
-                if cards[index].isFaceUp{
-                    if foundIndx == nil{
-                        foundIndx = index
-                    }else{
-                        foundIndx = nil
-                    }
-                    
-                }
-            }
-            return foundIndx
+//            var foundIndx:Int?
+//            for index in cards.indices{
+//                if cards[index].isFaceUp{
+//                    if foundIndx == nil{
+//                        foundIndx = index
+//                    }else{
+//                        foundIndx = nil
+//                    }
+//
+//                }
+//            }
+//            return foundIndx
+            
+            return cards.indices.filter{ cards[$0].isFaceUp}.oneAndOnly
         }
         set{
             for index in cards.indices{
@@ -45,7 +47,7 @@ struct Concentration{
        
         if let oneIndexAndOnly = indexOfOneAndOnlyCard , oneIndexAndOnly != index{
            
-            if cards[oneIndexAndOnly].identifier == cards[index].identifier{
+            if cards[oneIndexAndOnly] == cards[index]{
                 cards[oneIndexAndOnly].isMatched = true
                 cards[index].isMatched = true
                 score += 2
@@ -95,4 +97,11 @@ struct Concentration{
         
     }
     
+}
+
+
+extension Collection{
+    var oneAndOnly:Element?{
+        return count == 1 ? first : nil
+    }
 }

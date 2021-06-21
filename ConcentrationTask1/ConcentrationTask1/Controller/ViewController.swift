@@ -9,21 +9,21 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private var theme: [[String]] = []
+    private var theme: [String] = []
     
     private var themeColorButton: UIColor = #colorLiteral(red: 0.9176470588, green: 0.662745098, blue: 0.2666666667, alpha: 1)
     private var themeColorBackground: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    private var randomTheme: [String] = []
+    private var randomTheme: String = ""
     
     private var randomThemeColor: [UIColor] = [#colorLiteral(red: 0.9176470588, green: 0.662745098, blue: 0.2666666667, alpha: 1),#colorLiteral(red: 0.09019608051, green: 0, blue: 0.3019607961, alpha: 1),#colorLiteral(red: 0.5725490451, green: 0, blue: 0.2313725501, alpha: 1),#colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1),#colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1),#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)]
     private var randomThemeColorBackground: [UIColor] = [#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1),#colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1),#colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1),#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1),#colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)]
     
-    private var animals: [String] = []
-    private var sports: [String] = []
-    private var faces: [String] = []
-    private var cars: [String] = []
-    private var flags: [String] = []
-    private var foods: [String] = []
+    private var animals: String = ""
+    private var sports: String = ""
+    private var faces: String = ""
+    private var cars: String = ""
+    private var flags: String = ""
+    private var foods: String = ""
     
     @IBOutlet var buttonsArr: [UIButton]!
     
@@ -44,23 +44,31 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var scoreLbl: UILabel!{
         didSet{
-            scoreLbl.text = "Score : \(game.score)"
+            
+            update_strok_scoreLbl_string()
         }
     }
     @IBOutlet weak var flipsCountLbl: UILabel!{
         didSet{
-            flipsCountLbl.text = "Flips : \(flips_count)"
+            update_strok_flips_count_string()
         }
     }
-    
+    func  update_strok_scoreLbl_string(){
+        var attributes : [NSAttributedString.Key : Any] = [.strokeWidth: 5.0,.strokeColor : themeColorButton]
+        scoreLbl.attributedText = NSAttributedString(string: "Score : \(game.score)", attributes: attributes)
+    }
+    func  update_strok_flips_count_string(){
+        var attributes : [NSAttributedString.Key : Any] = [.strokeWidth: 5.0,.strokeColor : themeColorButton]
+        flipsCountLbl.attributedText = NSAttributedString(string: "Flips : \(flips_count)", attributes: attributes)
+    }
     private(set) var flips_count : Int = 0{
         didSet{
-            flipsCountLbl.text = "Flips : \(flips_count)"
+            update_strok_flips_count_string()
         }
     }
     private(set) var score : Int = 0{
         didSet{
-            scoreLbl.text = "Score : \(game.score)"
+            update_strok_scoreLbl_string()
         }
     }
     lazy var game = Concentration(numberOfCards: buttonsArrCount)
@@ -103,19 +111,19 @@ class ViewController: UIViewController {
         
     }
     
-    var emojiDictionary : [Int:String] =  [Int:String]()
+    var emojiDictionary =  [Card:String]()
     //var data_source = ["🍏", "🍎", "🍐", "🍊", "🍋", "🍌", "🍉", "🍇", "🍓", "🍈", "🍒", "🍑"]
     
     func getEmojiiFor(card : Card)->String{
         
         
-        if  emojiDictionary[card.identifier] == nil && randomTheme.count > 0{
-        
-            var random_emoji_index = randomTheme.count.arc4random
-            emojiDictionary[card.identifier] = randomTheme.remove(at: random_emoji_index)
+        if  emojiDictionary[card] == nil && randomTheme.count > 0{
+            // string
+            var random_emoji_index =  randomTheme.index(randomTheme.startIndex, offsetBy: randomTheme.count.arc4random)//randomTheme.count.arc4random
+            emojiDictionary[card] = String(randomTheme.remove(at: random_emoji_index))
         }
         
-        return emojiDictionary[card.identifier] ?? "??"
+        return emojiDictionary[card] ?? "??"
         
     }
 
@@ -145,19 +153,20 @@ extension Int{
 extension ViewController{
     
     private func setupTheme() {
-        animals = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼", "🐨", "🐯", "🦁", "🐮"]
-        sports = ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏐", "🏉", "🎱", "🏓", "🏸", "🥅", "🏒"]
-        faces = ["😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "☺️", "😊", "😇", "🙂"]
-        cars = ["🚗", "🚕", "🚙", "🚌", "🚎", "🏎", "🚓", "🚑", "🚒", "🚐", "🚚", "🚛"]
-        flags = ["🇹🇼", "🇯🇵", "🏳️", "🏴", "🏁", "🚩", "🏳️‍🌈", "🇱🇷", "🎌", "🇨🇦", "🇳🇵", "🇬🇪"]
-        foods = ["🍏", "🍎", "🍐", "🍊", "🍋", "🍌", "🍉", "🍇", "🍓", "🍈", "🍒", "🍑"]
+        animals = "🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮"
+        sports = "⚽️🏀🏈⚾️🎾🏐🏉🎱🏓🏸🥅🏒"
+        faces = "😀😃😄😁😆😅😂🤣☺️😊😇🙂"
+        cars = "🚗🚕🚙🚌🚎🏎🚓🚑🚒🚐🚚🚛"
+        flags = "🇹🇼🇯🇵🏳️🏴🏁🚩🏳️‍🌈🇱🇷🎌🇨🇦🇳🇵🇬🇪"
+        foods = "🍏🍎🍐🍊🍋🍌🍉🍇🍓🍈🍒🍑"
         
         theme = [animals, sports, faces, cars, flags, foods]
         randomTheme = getRandomTheme
     }
     
-    var getRandomTheme:[String]{
+    var getRandomTheme:String{
         theme.shuffle()
+       
         return theme[theme.count.arc4random]
     }
     var getRandomThemeColorBackground:UIColor{
