@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+// data type
 struct Card {
     
     var isFaceUp = false
@@ -30,5 +30,5 @@ struct Card {
 
 // to make card unique key for dictionary
 //extension Card:Hashable{
-//    
+//
 //}
